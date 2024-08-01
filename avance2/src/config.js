@@ -1,0 +1,2 @@
+export const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://rcalderonc0456:HolaMongo@cluster0.t3v3i4e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+export const TOKEN_SECRET = "some secret key";
