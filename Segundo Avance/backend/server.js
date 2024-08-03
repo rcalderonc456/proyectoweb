@@ -102,6 +102,15 @@ app.get('/api/productos', async (req, res) => {
     }
 });
 
+app.put('/api/productos/:id', async (req, res) => {
+    try {
+        const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(producto);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 app.delete('/api/productos/:id', async (req, res) => {
     try {
         await Producto.findByIdAndDelete(req.params.id);
@@ -111,3 +120,14 @@ app.delete('/api/productos/:id', async (req, res) => {
     }
 });
 
+app.get('/api/productos/:id', async (req, res) => {
+    try {
+        const producto = await Producto.findById(req.params.id);
+        if (!producto) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.json(producto);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
