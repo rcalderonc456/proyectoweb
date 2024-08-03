@@ -19,6 +19,21 @@
             margin: 0;
             font-size: 2rem;
         }
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+        }
         body {
             display: flex;
             flex-direction: column;
@@ -72,6 +87,10 @@
 <body>
     <header>
        <h1>Productos</h1> 
+       <nav>
+        <a href="Productos.html">Productos</a>
+        <a href="Proveedor.html">Proveedores</a>
+    </nav>
     </header>
     <div class="container">
         <div class="section">
