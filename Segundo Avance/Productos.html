@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <style>
+        header {
+            background-color: #004d99;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 60px;
+        }
+        .section {
+            text-align: center;
+            width: 45%;
+        }
+        .section img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+       <h1>Productos</h1> 
+    </header>
+    <div class="container">
+        <div class="section">
+            <img src="https://png.pngtree.com/png-clipart/20230504/original/pngtree-products-line-icon-png-image_9137821.png" alt="Agregar Producto">
+            <div class="title">Añadir Producto</div>
+            <a href="Agregarproductos.html" class="button">Agregar Producto</a>
+        </div>
+        <div class="section">
+            <img src="https://images.vexels.com/media/users/3/199820/isolated/preview/892bfdfcb80b356c53405aafbb716513-caja-de-carton-isometrica.png" alt="Ver Productos">
+            <div class="title">Ver Productos</div>
+            <a href="Verproductos.html" class="button">Ver Productos</a>
+        </div>
+    </div>
+</body>
+</html>

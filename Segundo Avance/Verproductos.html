@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Productos</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/productos');
+                const productos = await response.json();
+
+                const categorias = ['Artículos de Habitación', 'Productos de Limpieza', 'Alimentos y Bebidas', 'Mobiliario y Equipamiento'];
+                const contenedores = categorias.map(categoria => {
+                    const div = document.createElement('div');
+                    div.classList.add('categoria');
+                    div.innerHTML = `<h3>${categoria}</h3>`;
+                    return div;
+                });
+
+                const container = document.getElementById('categories-container');
+                contenedores.forEach(contenedor => container.appendChild(contenedor));
+
+                categorias.forEach(categoria => {
+                    const cantidad = productos.filter(producto => producto.category === categoria).length;
+                    const button = document.createElement('button');
+                    button.classList.add('category-button');
+                    button.innerHTML = `${categoria} (${cantidad})`;
+                    button.addEventListener('click', () => {
+                        mostrarProductosPorCategoria(productos, categoria);
+                    });
+
+                    document.querySelector(`.categoria:contains(${categoria})`).appendChild(button);
+                });
+            } catch (error) {
+                console.error('Error al cargar productos:', error);
+            }
+        });
+
+        function mostrarProductosPorCategoria(productos, categoria) {
+            const productosFiltrados = productos.filter(producto => producto.category === categoria);
+            const tabla = document.getElementById('productos-tabla');
+            tabla.innerHTML = `
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Fecha de recepción</th>
+                    <th>Acciones</th>
+                </tr>
+            `;
+            productosFiltrados.forEach(producto => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${producto.name}</td>
+                    <td>${producto.quantity}</td>
+                    <td>${producto.description}</td>
+                    <td>${producto.price}</td>
+                    <td>${producto.receptiondate}</td>
+                    <td>
+                        <button onclick="editarProducto('${producto._id}')">Editar</button>
+                        <button onclick="eliminarProducto('${producto._id}')">Eliminar</button>
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
+        }
+
+        async function eliminarProducto(id) {
+            try {
+                await fetch(`http://localhost:3000/api/productos/${id}`, { method: 'DELETE' });
+                alert('Producto eliminado');
+                location.reload();
+            } catch (error) {
+                console.error('Error al eliminar producto:', error);
+            }
+        }
+
+        function editarProducto(id) {
+            // Redirigir a la página de edición con el ID del producto
+            window.location.href = `editarProducto.html?id=${id}`;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Ver Productos</h1>
+    </header>
+    <section id="categories-container"></section>
+    <table id="productos-tabla"></table>
+</body>
+</html>
