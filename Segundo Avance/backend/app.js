@@ -5,12 +5,16 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 // Crear una instancia de la aplicación Express
 const app = express();
+const port = 3000; 
 // Configuración del middleware para analizar los cuerpos de las solicitudes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.json());
 
 // Conectar a MongoDB
 mongoose.connect('mongodb+srv://marcelamedranoz55:ucrB9Nr2irIQWL3k@pfgrup5.2bokdh9.mongodb.net/', {
@@ -71,7 +75,117 @@ app.post("/login", async (req, res) => {
   }
 });
 
-////// PARA PROBAR QUE EL PUERTO ESTA FUNCIONANDO
-app.listen(3006, () => {
-  console.log("Server running on port", 3006);
+//PROVEEDORES
+
+// Definir el esquema y el modelo de Proveedor
+const proveedorSchema = new mongoose.Schema({
+  name: String,
+  contact: String,
+  phone: String,
+  email: String
 });
+
+const Proveedor = mongoose.model('Proveedor', proveedorSchema);
+
+// Rutas
+app.post('/api/proveedores', async (req, res) => {
+  try {
+      const proveedor = new Proveedor(req.body);
+      await proveedor.save();
+      res.status(201).json(proveedor);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/api/proveedores', async (req, res) => {
+  try {
+      const proveedores = await Proveedor.find();
+      res.json(proveedores);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.delete('/api/proveedores/:id', async (req, res) => {
+  try {
+      await Proveedor.findByIdAndDelete(req.params.id);
+      res.status(204).end();
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+//PRODUCTOS
+
+const productoSchema = new mongoose.Schema({
+  name: String,
+  quantity: Number,
+  description: String,
+  price: Number,
+  category: String,
+  receptiondate: Date
+});
+
+const Producto = mongoose.model('Producto', productoSchema);
+
+// Rutas
+app.post('/api/productos', async (req, res) => {
+  try {
+      const producto = new Producto(req.body);
+      await producto.save();
+      res.status(201).json(producto);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/api/productos', async (req, res) => {
+  try {
+      const productos = await Producto.find();
+      const lowStockProducts = productos.filter(producto => producto.quantity < 2);
+      if (lowStockProducts.length > 0) {
+          console.log('Alerta: algunos productos tienen una cantidad menor a 2:', lowStockProducts);
+      }
+      res.json(productos);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.put('/api/productos/:id', async (req, res) => {
+  try {
+      const producto = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.json(producto);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.delete('/api/productos/:id', async (req, res) => {
+  try {
+      await Producto.findByIdAndDelete(req.params.id);
+      res.status(204).end();
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/api/productos/:id', async (req, res) => {
+  try {
+      const producto = await Producto.findById(req.params.id);
+      if (!producto) {
+          return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+      res.json(producto);
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
+
+////// PARA PROBAR QUE EL PUERTO ESTA FUNCIONANDO
+app.listen(port, () => {
+  console.log(`Servidor corriendo en http://localhost:${port}`);
+});
+
