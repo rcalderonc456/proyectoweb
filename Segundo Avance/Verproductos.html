@@ -31,7 +31,9 @@
                         mostrarProductosPorCategoria(productos, categoria);
                     });
 
-                    document.querySelector(`.categoria:contains(${categoria})`).appendChild(button);
+                    // Usar una función de búsqueda para encontrar el contenedor correcto
+                    const contenedor = Array.from(document.querySelectorAll('.categoria')).find(div => div.querySelector('h3').textContent === categoria);
+                    contenedor.appendChild(button);
                 });
             } catch (error) {
                 console.error('Error al cargar productos:', error);

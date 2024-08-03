@@ -68,7 +68,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ name, quantity, description, price, receptiondate })
+                        body: JSON.stringify({ name, quantity, description, price, category, receptiondate })
                     });
 
                     if (response.ok) {
