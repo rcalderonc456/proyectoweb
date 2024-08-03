@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                alert('ID de producto no especificado');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/productos/${productId}`);
+                if (!response.ok) {
+                    throw new Error('Error al obtener los detalles del producto');
+                }
+                const producto = await response.json();
+
+                document.getElementById('name').value = producto.name || '';
+                document.getElementById('quantity').value = producto.quantity || '';
+                document.getElementById('description').value = producto.description || '';
+                document.getElementById('price').value = producto.price || '';
+                document.getElementById('category').value = producto.category || '';
+                document.getElementById('receptiondate').value = producto.receptiondate.split('T')[0] || '';
+            } catch (error) {
+                console.error('Error al cargar producto:', error);
+                alert('No se pudo cargar el producto');
+            }
+
+            const editForm = document.getElementById('edit-form');
+
+            editForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const quantity = document.getElementById('quantity').value;
+                const description = document.getElementById('description').value;
+                const price = document.getElementById('price').value;
+                const category = document.getElementById('category').value;
+                const receptiondate = document.getElementById('receptiondate').value;
+
+                try {
+                    const response = await fetch(`http://localhost:3000/api/productos/${productId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name, quantity, description, price, category, receptiondate })
+                    });
+
+                    if (response.ok) {
+                        alert('Producto editado exitosamente');
+                        window.location.href = 'Productos.html';
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Error al editar producto:', errorData);
+                    }
+                } catch (error) {
+                    console.error('Error al editar producto:', error);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Editar Producto</h1>
+        <nav>
+            <a href="Productos.html">Productos</a>
+            <a href="Proveedor.html">Proveedores</a>
+        </nav>
+    </header>
+    <section id="edit-producto">
+        <h2>Editar Producto</h2>
+
+        <form id="edit-form">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" placeholder="Nombre del producto" required>
+     
+            <label for="quantity">Cantidad:</label>
+            <input type="number" id="quantity" name="quantity" placeholder="Cantidad" required>
+
+            <label for="description">Descripción:</label>
+            <input type="text" id="description" name="description" placeholder="Descripción" required>
+
+            <label for="price">Costo Unitario:</label>
+            <input type="number" id="price" name="price" placeholder="Costo Unitario" required>
+
+            <label for="category">Categoría:</label>
+            <select id="category" name="category" required>
+                <option value="Artículos de Habitación">Artículos de Habitación</option>
+                <option value="Productos de Limpieza">Productos de Limpieza</option>
+                <option value="Alimentos y Bebidas">Alimentos y Bebidas</option>
+                <option value="Mobiliario y Equipamiento">Mobiliario y Equipamiento</option>
+            </select>
+
+            <label for="receptiondate">Fecha de recepción:</label>
+            <input type="date" id="receptiondate" name="receptiondate" placeholder="Fecha de recepción" required>
+            
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </section>
+</body>
+</html>
