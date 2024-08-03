@@ -64,3 +64,50 @@ app.delete('/api/proveedores/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+
+
+// Definir el esquema y el modelo de Producto
+const productoSchema = new mongoose.Schema({
+    name: String,
+    quantity: Number,
+    description: String,
+    price: Number,
+    category: String,
+    receptiondate: Date
+});
+
+const Producto = mongoose.model('Producto', productoSchema);
+
+// Rutas
+app.post('/api/productos', async (req, res) => {
+    try {
+        const producto = new Producto(req.body);
+        await producto.save();
+        res.status(201).json(producto);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/api/productos', async (req, res) => {
+    try {
+        const productos = await Producto.find();
+        const lowStockProducts = productos.filter(producto => producto.quantity < 2);
+        if (lowStockProducts.length > 0) {
+            console.log('Alerta: algunos productos tienen una cantidad menor a 2:', lowStockProducts);
+        }
+        res.json(productos);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.delete('/api/productos/:id', async (req, res) => {
+    try {
+        await Producto.findByIdAndDelete(req.params.id);
+        res.status(204).end();
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
